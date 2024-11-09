@@ -2,6 +2,8 @@ import { Body, Controller, Delete, Get, Param, ParseIntPipe, ParseUUIDPipe, Patc
 import { log } from 'console';
 import { CarsService } from './cars.service';
 import { CreateCarDto } from './dto/create-car.dto';
+import { create } from 'domain';
+import { UpdateCarDto } from './dto/update-car.dto';
 
 @Controller('cars')
 export class CarsController {
@@ -22,16 +24,15 @@ export class CarsController {
         return this.carsService.findOneById(id);
     }
     @Post()
-    @UsePipes(ValidationPipe)
     createCar(@Body() createCarDto: CreateCarDto) {
-        return createCarDto;
+        return this.carsService.create(createCarDto);
     }
 
     @Patch(':id')
     updateCar(
-        @Param('id', ParseIntPipe) id :number,
-        @Body() body: any){
-        return body;
+        @Param('id', ParseUUIDPipe) id :string,
+        @Body() updateCarDto: UpdateCarDto){
+        return this.carsService.update(id,updateCarDto);
     }
     @Delete(':id')
     deleteCar(@Param('id', ParseIntPipe) id:number){
